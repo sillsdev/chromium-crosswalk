@@ -1,0 +1,63 @@
+{
+    'targets' : [
+    {
+        'target_name' : 'graphite',
+        'type' : 'static_library',
+        'include_dirs' : [
+            'graphite/include',
+            'graphite/src',
+        ],
+        'direct_dependent_settings': {
+            'include_dirs': [
+                'graphite/include',
+          ],
+        },
+        'sources' : [
+            'graphite/src/gr_char_info.cpp',
+            'graphite/src/gr_face.cpp',
+            'graphite/src/gr_features.cpp',
+            'graphite/src/gr_font.cpp',
+            'graphite/src/gr_logging.cpp',
+            'graphite/src/gr_segment.cpp',
+            'graphite/src/gr_slot.cpp',
+            'graphite/src/json.cpp',
+            'graphite/src/CachedFace.cpp',
+            'graphite/src/CmapCache.cpp',
+            'graphite/src/Code.cpp',
+            'graphite/src/Collider.cpp',
+            'graphite/src/Decompressor.cpp',
+            'graphite/src/Face.cpp',
+            'graphite/src/FeatureMap.cpp',
+            'graphite/src/FileFace.cpp',
+            'graphite/src/Font.cpp',
+            'graphite/src/GlyphCache.cpp',
+            'graphite/src/GlyphFace.cpp',
+            'graphite/src/Intervals.cpp',
+            'graphite/src/Justifier.cpp',
+            'graphite/src/NameTable.cpp',
+            'graphite/src/Pass.cpp',
+            'graphite/src/Position.cpp',
+            'graphite/src/SegCache.cpp',
+            'graphite/src/SegCacheEntry.cpp',
+            'graphite/src/SegCacheStore.cpp',
+            'graphite/src/Segment.cpp',
+            'graphite/src/Silf.cpp',
+            'graphite/src/Slot.cpp',
+            'graphite/src/Sparse.cpp',
+            'graphite/src/TtfUtil.cpp',
+            'graphite/src/UtfCodec.cpp',
+        ],
+        'defines' : [
+            'GRAPHITE2_NSEGCACHE',
+            'GRAPHITE2_NFILEFACE',
+            'GRAPHITE2_NTRACING',
+            'GRAPHITE2_STATIC',
+        ],
+        'conditions' : [
+            ['clang==1', {
+                'sources' : ['graphite/src/call_machine.cpp', ],
+              }, {  'sources' : ['graphite/src/direct_machine.cpp', ], },
+            ],
+        ],
+    }],
+}

@@ -146,6 +146,11 @@ ots::TableAction BlinkOTSContext::GetTableAction(uint32_t tag)
     const uint32_t gposTag = OTS_TAG('G', 'P', 'O', 'S');
     const uint32_t gsubTag = OTS_TAG('G', 'S', 'U', 'B');
 #endif
+    const uint32_t SilfTag = OTS_TAG('S', 'i', 'l', 'f');
+    const uint32_t SillTag = OTS_TAG('S', 'i', 'l', 'l');
+    const uint32_t GlatTag = OTS_TAG('G', 'l', 'a', 't');
+    const uint32_t GlocTag = OTS_TAG('G', 'l', 'o', 'c');
+    const uint32_t FeatTag = OTS_TAG('F', 'e', 'a', 't');
 
     switch (tag) {
     // Google Color Emoji Tables
@@ -160,6 +165,12 @@ ots::TableAction BlinkOTSContext::GetTableAction(uint32_t tag)
     case gposTag:
     case gsubTag:
 #endif
+    case SilfTag:
+    case SillTag:
+    case GlatTag:
+    case GlocTag:
+    case FeatTag:
+
         return ots::TABLE_ACTION_PASSTHRU;
     default:
         return ots::TABLE_ACTION_DEFAULT;

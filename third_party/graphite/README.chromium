@@ -1,0 +1,6 @@
+Created from the latest release version of graphite2-minimal-x.y.z.tgz from github or sourceforge.
+
+Unpack the tarball and then
+
+mv graphite2-x.y.z graphite
+

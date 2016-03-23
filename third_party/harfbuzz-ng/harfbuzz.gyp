@@ -7,6 +7,7 @@
     '../../build/win_precompile.gypi',
   ],
   'variables': {
+    'use_graphite%' : 1,
     'conditions': [
       ['OS=="linux" and chromeos==1', {
         # Since version 1.31.0, pangoft2 which we depend on pulls in harfbuzz
@@ -183,6 +184,18 @@
                 '../../build/linux/system.gyp:freetype2',
                 '../../build/linux/system.gyp:glib',
               ],
+            }],
+            ['use_graphite==1', {
+                'sources' : [
+                    'src/hb-graphite2.cc',
+                    'src/hb-graphite2.h',
+                ],
+                'dependencies' : [
+                    '../graphite/graphite.gyp:graphite',
+                ],
+                'defines' : [
+                    'HAVE_GRAPHITE2',
+                ],
             }],
           ],
         },
