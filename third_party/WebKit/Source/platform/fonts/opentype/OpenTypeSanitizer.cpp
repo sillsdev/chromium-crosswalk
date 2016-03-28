@@ -152,6 +152,7 @@ ots::TableAction BlinkOTSContext::GetTableAction(uint32_t tag)
     const uint32_t GlocTag = OTS_TAG('G', 'l', 'o', 'c');
     const uint32_t FeatTag = OTS_TAG('F', 'e', 'a', 't');
 
+    tag = ntohl(tag);
     switch (tag) {
     // Google Color Emoji Tables
     case cbdtTag:
