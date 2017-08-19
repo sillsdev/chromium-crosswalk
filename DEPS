@@ -88,7 +88,7 @@ deps = {
   'src/third_party/hunspell_dictionaries':
     (Var("chromium_git")) + '/chromium/deps/hunspell_dictionaries.git@c106afdcec5d3de2622e19f1b3294c47bbd8bd72',
   'src/third_party/icu':
-    (Var("chromium_git")) + '/chromium/deps/icu.git@08cb956852a5ccdba7f9c941728bb833529ba3c6',
+    (Var("chromium_git")) + '/chromium/deps/icu.git@4b06aadd0556135d3a90a4eb03eca24ef249e03e',
   'src/third_party/jsoncpp/source':
     (Var("chromium_git")) + '/external/github.com/open-source-parsers/jsoncpp.git@f572e8e42e22cfcf5ab0aea26574f408943edfa4',
   'src/third_party/leveldatabase/src':
