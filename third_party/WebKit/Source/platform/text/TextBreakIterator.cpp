@@ -179,7 +179,7 @@ static const unsigned char breakAllLineBreakClassTable[][U_LB_COUNT / 8 + 1] = {
 #undef AL
 
 static_assert(WTF_ARRAY_LENGTH(asciiLineBreakTable) == asciiLineBreakTableLastChar - asciiLineBreakTableFirstChar + 1, "asciiLineBreakTable should be consistent");
-static_assert(WTF_ARRAY_LENGTH(breakAllLineBreakClassTable) == U_LB_COUNT, "breakAllLineBreakClassTable should be consistent");
+static_assert(WTF_ARRAY_LENGTH(breakAllLineBreakClassTable) == 40, "breakAllLineBreakClassTable should be consistent");
 
 static inline bool shouldBreakAfter(UChar lastCh, UChar ch, UChar nextCh)
 {
