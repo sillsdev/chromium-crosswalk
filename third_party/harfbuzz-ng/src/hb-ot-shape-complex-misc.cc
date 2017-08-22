@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013  Google, Inc.
+ * Copyright © 2010  Google, Inc.
  *
  *  This is part of HarfBuzz, a text shaping library.
  *
@@ -24,38 +24,32 @@
  * Google Author(s): Behdad Esfahbod
  */
 
-#ifndef HB_H_IN
-#error "Include <hb.h> instead."
-#endif
+#include "hb-ot-shape-complex-private.hh"
 
-#ifndef HB_DEPRECATED_H
-#define HB_DEPRECATED_H
 
-#include "hb-common.h"
-#include "hb-unicode.h"
-#include "hb-font.h"
+/* TODO Add kana, hangul, and other small sahpers here */
 
-HB_BEGIN_DECLS
+/* When adding trivial shapers, eg. kana, hangul, etc, we can either
+ * add a full shaper enum value for them, or switch on the script in
+ * the default complex shaper.  The former is faster, so I think that's
+ * what we would do, and hence the default complex shaper shall remain
+ * empty.
+ */
 
-#ifndef HB_DISABLE_DEPRECATED
+void
+_hb_ot_shape_complex_collect_features_default (hb_ot_map_builder_t *map, const hb_segment_properties_t  *props)
+{
+}
 
-#define HB_SCRIPT_CANADIAN_ABORIGINAL		HB_SCRIPT_CANADIAN_SYLLABICS
+bool
+_hb_ot_shape_complex_prefer_decomposed_default (void)
+{
+  return FALSE;
+}
 
-#define HB_BUFFER_FLAGS_DEFAULT			HB_BUFFER_FLAG_DEFAULT
-#define HB_BUFFER_SERIALIZE_FLAGS_DEFAULT	HB_BUFFER_SERIALIZE_FLAG_DEFAULT
+void
+_hb_ot_shape_complex_setup_masks_default (hb_ot_map_t *map, hb_buffer_t *buffer)
+{
+}
 
-typedef hb_bool_t (*hb_font_get_glyph_func_t) (hb_font_t *font, void *font_data,
-					       hb_codepoint_t unicode, hb_codepoint_t variation_selector,
-					       hb_codepoint_t *glyph,
-					       void *user_data);
 
-HB_EXTERN void
-hb_font_funcs_set_glyph_func (hb_font_funcs_t *ffuncs,
-			      hb_font_get_glyph_func_t func,
-			      void *user_data, hb_destroy_func_t destroy);
-
-#endif
-
-HB_END_DECLS
-
-#endif /* HB_DEPRECATED_H */

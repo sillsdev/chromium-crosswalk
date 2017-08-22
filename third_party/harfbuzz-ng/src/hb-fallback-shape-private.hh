@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013  Google, Inc.
+ * Copyright © 2011  Google, Inc.
  *
  *  This is part of HarfBuzz, a text shaping library.
  *
@@ -24,38 +24,25 @@
  * Google Author(s): Behdad Esfahbod
  */
 
-#ifndef HB_H_IN
-#error "Include <hb.h> instead."
-#endif
+#ifndef HB_FALLBACK_SHAPE_PRIVATE_HH
+#define HB_FALLBACK_SHAPE_PRIVATE_HH
 
-#ifndef HB_DEPRECATED_H
-#define HB_DEPRECATED_H
+#include "hb-private.hh"
 
-#include "hb-common.h"
-#include "hb-unicode.h"
-#include "hb-font.h"
+#include "hb-shape.h"
+
 
 HB_BEGIN_DECLS
 
-#ifndef HB_DISABLE_DEPRECATED
 
-#define HB_SCRIPT_CANADIAN_ABORIGINAL		HB_SCRIPT_CANADIAN_SYLLABICS
+HB_INTERNAL hb_bool_t
+hb_fallback_shape (hb_font_t          *font,
+		   hb_buffer_t        *buffer,
+		   const hb_feature_t *features,
+		   unsigned int        num_features,
+		   const char * const *shaper_options);
 
-#define HB_BUFFER_FLAGS_DEFAULT			HB_BUFFER_FLAG_DEFAULT
-#define HB_BUFFER_SERIALIZE_FLAGS_DEFAULT	HB_BUFFER_SERIALIZE_FLAG_DEFAULT
-
-typedef hb_bool_t (*hb_font_get_glyph_func_t) (hb_font_t *font, void *font_data,
-					       hb_codepoint_t unicode, hb_codepoint_t variation_selector,
-					       hb_codepoint_t *glyph,
-					       void *user_data);
-
-HB_EXTERN void
-hb_font_funcs_set_glyph_func (hb_font_funcs_t *ffuncs,
-			      hb_font_get_glyph_func_t func,
-			      void *user_data, hb_destroy_func_t destroy);
-
-#endif
 
 HB_END_DECLS
 
-#endif /* HB_DEPRECATED_H */
+#endif /* HB_FALLBACK_SHAPE_PRIVATE_HH */
