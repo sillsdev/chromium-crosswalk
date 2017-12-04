@@ -73,7 +73,7 @@ if ! which lsb_release > /dev/null; then
 fi
 
 lsb_release=$(lsb_release --codename --short)
-ubuntu_codenames="(precise|trusty|utopic|vivid)"
+ubuntu_codenames="(precise|trusty|utopic|vivid|xenial|artful)"
 if [ 0 -eq "${do_unsupported-0}" ] && [ 0 -eq "${do_quick_check-0}" ] ; then
   if [[ ! $lsb_release =~ $ubuntu_codenames ]]; then
     echo "ERROR: Only Ubuntu 12.04 (precise), 14.04 (trusty), " \
@@ -96,22 +96,30 @@ fi
 # Packages needed for chromeos only
 chromeos_dev_list="libbluetooth-dev libxkbcommon-dev realpath"
 
+old_dev_list="apache2.2-bin libapache2-mod-php5 php5-cgi ttf-indic-fonts
+              ttf-kochi-gothin ttf-kochi-mincho xfonts-mathml"
+
 # Packages needed for development
-dev_list="apache2.2-bin bison cdbs curl dpkg-dev elfutils devscripts fakeroot
+dev_list="bison cdbs curl dpkg-dev elfutils devscripts fakeroot
           flex fonts-thai-tlwg g++ git-core git-svn gperf language-pack-da
           language-pack-fr language-pack-he language-pack-zh-hant
-          libapache2-mod-php5 libasound2-dev libbrlapi-dev libav-tools
+          libasound2-dev libbrlapi-dev libav-tools
           libbz2-dev libcairo2-dev libcap-dev libcups2-dev libcurl4-gnutls-dev
           libdrm-dev libelf-dev libexif-dev libffi-dev libgconf2-dev
           libglib2.0-dev libglu1-mesa-dev libgnome-keyring-dev libgtk2.0-dev
           libkrb5-dev libnspr4-dev libnss3-dev libpam0g-dev libpci-dev
           libpulse-dev libsctp-dev libspeechd-dev libsqlite3-dev libssl-dev
           libudev-dev libwww-perl libxslt1-dev libxss-dev libxt-dev libxtst-dev
-          openbox patch perl php5-cgi pkg-config python python-cherrypy3
+          openbox patch perl pkg-config python python-cherrypy3
           python-crypto python-dev python-numpy python-opencv python-openssl
           python-psutil python-yaml rpm ruby subversion ttf-dejavu-core
-          ttf-indic-fonts ttf-kochi-gothic ttf-kochi-mincho wdiff xfonts-mathml
-          zip $chromeos_dev_list"
+          wdiff zip $chromeos_dev_list"
+
+if [ "x$lsb_release" != "xxenial" -a "x$lsb_release" != "xartful" ]; then
+    dev_list="$old_dev_list $dev_list"
+else
+    dev_list="$dev_list apache2:i386 apache2 fonts-indic"
+fi
 
 # 64-bit systems need a minimum set of 32-bit compat packages for the pre-built
 # NaCl binaries.

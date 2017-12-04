@@ -54,7 +54,7 @@ def GetVersion(compiler, tool):
   try:
     # Note that compiler could be something tricky like "distcc g++".
     if tool == "compiler":
-      compiler = compiler + " -dumpversion"
+      compiler = compiler + " -dumpfullversion"
       # 4.6
       version_re = re.compile(r"(\d+)\.(\d+)")
     elif tool == "assembler":
