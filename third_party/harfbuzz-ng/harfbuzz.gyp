@@ -128,7 +128,7 @@
             'src/hb-ot-tag.cc',
             'src/hb-ot-tag.h',
             'src/hb-ot-var-avar-table.hh',
-            'src/hb-ot-var-avar.cc',
+            'src/hb-ot-var.cc',
             'src/hb-ot-var-fvar-table.hh',
             'src/hb-ot-var.h',
             'src/hb-ot-var-hvar-table.hh',
