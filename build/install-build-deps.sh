@@ -73,6 +73,7 @@ if ! which lsb_release > /dev/null; then
 fi
 
 lsb_release=$(lsb_release --codename --short)
+lsb_version=$(lsb_release --release --short)
 ubuntu_codenames="(precise|trusty|utopic|vivid|xenial|artful)"
 if [ 0 -eq "${do_unsupported-0}" ] && [ 0 -eq "${do_quick_check-0}" ] ; then
   if [[ ! $lsb_release =~ $ubuntu_codenames ]]; then
@@ -118,7 +119,7 @@ dev_list="bison cdbs curl dpkg-dev elfutils devscripts fakeroot
 if [ "x$lsb_release" != "xxenial" -a "x$lsb_release" != "xartful" ]; then
     dev_list="$old_dev_list $dev_list"
 else
-    dev_list="$dev_list apache2:i386 apache2 fonts-indic"
+    dev_list="$dev_list fonts-indic ninja-build locales-all libnotify-dev openjdk-8-jdk-headless zlib1g:i386"
 fi
 
 # 64-bit systems need a minimum set of 32-bit compat packages for the pre-built
@@ -161,13 +162,16 @@ lib32_list="linux-libc-dev:i386"
 
 # arm cross toolchain packages needed to build chrome on armhf
 arm_list="libc6-dev-armhf-cross
-          linux-libc-dev-armhf-cross
-          g++-arm-linux-gnueabihf"
+          linux-libc-dev-armhf-cross"
 
 # Work around for dependency issue Ubuntu/Trusty: http://crbug.com/435056
-if [ "x$lsb_release" = "xtrusty" ]; then
+if [ "x$lsb_release" = "xxenial" ]; then
+    arm_list+=" gcc-5-arm-linux-gnueabihf g++-5-arm-linux-gnueabihf"
+elif [ "x$lsb_release" = "xtrusty" ]; then
   arm_list+=" g++-4.8-multilib-arm-linux-gnueabihf
               gcc-4.8-multilib-arm-linux-gnueabihf"
+else
+    arm_list+=" g++-arm-linux-gnueabihf"
 fi
 
 # Packages to build NaCl, its toolchains, and its ports.
