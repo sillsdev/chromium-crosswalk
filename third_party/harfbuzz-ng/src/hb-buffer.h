@@ -63,7 +63,7 @@ HB_BEGIN_DECLS
  */
 typedef struct hb_glyph_info_t {
   hb_codepoint_t codepoint;
-  hb_mask_t      mask; /* Holds hb_glyph_flags_t after hb_shape() */
+  hb_mask_t      mask; /* Holds hb_glyph_flags_t after hb_shape(), plus other things. */
   uint32_t       cluster;
 
   /*< private >*/
@@ -76,6 +76,13 @@ typedef enum { /*< flags >*/
 
   HB_GLYPH_FLAG_DEFINED			= 0x00000001 /* OR of all defined flags */
 } hb_glyph_flags_t;
+
+HB_EXTERN hb_glyph_flags_t
+hb_glyph_info_get_glyph_flags (const hb_glyph_info_t *info);
+
+#define hb_glyph_info_get_glyph_flags(info) \
+	((hb_glyph_flags_t) ((unsigned int) (info)->mask & HB_GLYPH_FLAG_DEFINED))
+
 
 /**
  * hb_glyph_position_t:
@@ -125,8 +132,8 @@ typedef struct hb_segment_properties_t {
 #define HB_SEGMENT_PROPERTIES_DEFAULT {HB_DIRECTION_INVALID, \
 				       HB_SCRIPT_INVALID, \
 				       HB_LANGUAGE_INVALID, \
-				       NULL, \
-				       NULL}
+				       (void *) 0, \
+				       (void *) 0}
 
 HB_EXTERN hb_bool_t
 hb_segment_properties_equal (const hb_segment_properties_t *a,
@@ -474,12 +481,12 @@ typedef enum { /*< flags >*/
 
   /* Buffers with different content_type cannot be meaningfully compared
    * in any further detail. */
-  HB_BUFFER_DIFF_FLAG_CONTENT_TYPE_MISMATCH	= 0X0001,
+  HB_BUFFER_DIFF_FLAG_CONTENT_TYPE_MISMATCH	= 0x0001,
 
   /* For buffers with differing length, the per-glyph comparison is not
    * attempted, though we do still scan reference for dottedcircle / .notdef
    * glyphs. */
-  HB_BUFFER_DIFF_FLAG_LENGTH_MISMATCH		= 0X0002,
+  HB_BUFFER_DIFF_FLAG_LENGTH_MISMATCH		= 0x0002,
 
   /* We want to know if dottedcircle / .notdef glyphs are present in the
    * reference, as we may not care so much about other differences in this
@@ -491,13 +498,13 @@ typedef enum { /*< flags >*/
    * and report which aspect(s) of the glyph info/position are different. */
   HB_BUFFER_DIFF_FLAG_CODEPOINT_MISMATCH	= 0x0010,
   HB_BUFFER_DIFF_FLAG_CLUSTER_MISMATCH		= 0x0020,
-  HB_BUFFER_DIFF_FLAG_MASK_MISMATCH		= 0x0040,
+  HB_BUFFER_DIFF_FLAG_GLYPH_FLAGS_MISMATCH	= 0x0040,
   HB_BUFFER_DIFF_FLAG_POSITION_MISMATCH		= 0x0080
 
 } hb_buffer_diff_flags_t;
 
 /* Compare the contents of two buffers, report types of differences. */
-hb_buffer_diff_flags_t
+HB_EXTERN hb_buffer_diff_flags_t
 hb_buffer_diff (hb_buffer_t *buffer,
 		hb_buffer_t *reference,
 		hb_codepoint_t dottedcircle_glyph,
