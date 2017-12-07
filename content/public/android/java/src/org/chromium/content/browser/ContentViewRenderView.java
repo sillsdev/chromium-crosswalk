@@ -66,7 +66,7 @@ public class ContentViewRenderView extends FrameLayout {
     // listeners.
     private void initTextureView(Context context) {
         mTextureView = new TextureView(context);
-        mTextureView.setBackgroundColor(Color.WHITE);
+        //mTextureView.setBackgroundColor(Color.WHITE);
 
         mTextureView.setSurfaceTextureListener(new SurfaceTextureListener() {
             @Override
