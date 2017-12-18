@@ -913,7 +913,7 @@ if [ "$PULL_LIBS" -a -z "$NO_PULL_LIBS" ]; then
   rm -f "$PULL_LIBS_DIR/build.fingerprint"
   SYSTEM_LIBS=$(echo "$MAPPINGS" | \
       awk '$6 ~ /\/system\/.*\.so$/ { print $6; }' | sort -u)
-  for SYSLIB in /system/bin/linker $SYSTEM_LIBS; do
+  for SYSLIB in /system/bin/linker /system/bin/linker64 $SYSTEM_LIBS; do
     echo "Pulling from device: $SYSLIB"
     DST_FILE=$PULL_LIBS_DIR$SYSLIB
     DST_DIR=$(dirname "$DST_FILE")
@@ -988,7 +988,7 @@ log "adb shell $COMMAND_PREFIX $TARGET_GDBSERVER :$TARGET_PORT \
  --attach $PID $COMMAND_SUFFIX > $GDBSERVER_LOG 2>&1) &
 GDBSERVER_PID=$!
 echo "$GDBSERVER_PID" > $GDBSERVER_PIDFILE
-log "background job pid: $GDBSERVER_PID"
+log "background job pid: $GDBSERVER_PID attaching to $PID"
 
 # Check that it is still running after a few seconds. If not, this means we
 # could not properly attach to it
@@ -1026,6 +1026,8 @@ echo "  import gdb_chrome" >> $COMMANDS
 echo "finally:" >> $COMMANDS
 echo "  sys.path.pop(0)" >> $COMMANDS
 echo "end" >> $COMMANDS
+echo "handle SIGINT stop" >> $COMMANDS
+echo "set detach-on-fork off" >> $COMMANDS
 echo "file $TMPDIR/$GDBEXEC" >> $COMMANDS
 echo "directory $CHROMIUM_SRC" >> $COMMANDS
 echo "set solib-absolute-prefix $PULL_LIBS_DIR" >> $COMMANDS
