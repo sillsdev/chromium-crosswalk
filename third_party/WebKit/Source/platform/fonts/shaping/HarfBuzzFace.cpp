@@ -175,30 +175,13 @@ static void SkiaGetGlyphWidthAndExtents(SkPaint* paint, hb_codepoint_t codepoint
 #define HB_VERSION_ATLEAST(major, minor, micro) 0
 #endif
 
-static hb_bool_t harfBuzzGetGlyph(hb_font_t* hbFont, void* fontData, hb_codepoint_t unicode, hb_codepoint_t variationSelector, hb_codepoint_t* glyph, void* userData)
+static hb_bool_t harfBuzzGetGlyph(hb_font_t* hbFont, void* fontData, hb_codepoint_t unicode, hb_codepoint_t* glyph, void* userData)
 {
     HarfBuzzFontData* hbFontData = reinterpret_cast<HarfBuzzFontData*>(fontData);
 
     RELEASE_ASSERT(hbFontData);
     if (unicode < hbFontData->m_rangeFrom || unicode > hbFontData->m_rangeTo)
         return false;
-
-    if (variationSelector) {
-#if !HB_VERSION_ATLEAST(0, 9, 28)
-        return false;
-#else
-        // Skia does not support variation selectors, but hb does.
-        // We're not fully ready to switch to hb-ot-font yet,
-        // but are good enough to get glyph IDs for OpenType fonts.
-        if (!hbFontData->m_hbOpenTypeFont) {
-            hbFontData->m_hbOpenTypeFont = hb_font_create(hbFontData->m_face);
-            hb_ot_font_set_funcs(hbFontData->m_hbOpenTypeFont);
-        }
-        return hb_font_get_glyph(hbFontData->m_hbOpenTypeFont, unicode, variationSelector, glyph);
-        // When not found, glyph_func should return false rather than fallback to the base.
-        // http://lists.freedesktop.org/archives/harfbuzz/2015-May/004888.html
-#endif
-    }
 
     WTF::HashMap<uint32_t, uint16_t>::AddResult result = hbFontData->m_glyphCacheForFaceCacheEntry->add(unicode, 0);
     if (result.isNewEntry) {
@@ -211,6 +194,30 @@ static hb_bool_t harfBuzzGetGlyph(hb_font_t* hbFont, void* fontData, hb_codepoin
     }
     *glyph = result.storedValue->value;
     return !!*glyph;
+}
+
+static hb_bool_t harfBuzzGetGlyphVS(hb_font_t* hbFont, void* fontData, hb_codepoint_t unicode, hb_codepoint_t variationSelector, hb_codepoint_t* glyph, void* userData)
+{
+    HarfBuzzFontData* hbFontData = reinterpret_cast<HarfBuzzFontData*>(fontData);
+
+    RELEASE_ASSERT(hbFontData);
+    if (unicode < hbFontData->m_rangeFrom || unicode > hbFontData->m_rangeTo)
+        return false;
+
+#if !HB_VERSION_ATLEAST(0, 9, 28)
+    return false;
+#else
+    // Skia does not support variation selectors, but hb does.
+    // We're not fully ready to switch to hb-ot-font yet,
+    // but are good enough to get glyph IDs for OpenType fonts.
+    if (!hbFontData->m_hbOpenTypeFont) {
+        hbFontData->m_hbOpenTypeFont = hb_font_create(hbFontData->m_face);
+        hb_ot_font_set_funcs(hbFontData->m_hbOpenTypeFont);
+    }
+    return hb_font_get_glyph(hbFontData->m_hbOpenTypeFont, unicode, variationSelector, glyph);
+    // When not found, glyph_func should return false rather than fallback to the base.
+    // http://lists.freedesktop.org/archives/harfbuzz/2015-May/004888.html
+#endif
 }
 
 static hb_position_t harfBuzzGetGlyphHorizontalAdvance(hb_font_t* hbFont, void* fontData, hb_codepoint_t glyph, void* userData)
@@ -294,7 +301,8 @@ static hb_font_funcs_t* harfBuzzSkiaGetFontFuncs()
     // HarfBuzz will use the fallback implementation if they aren't set.
     if (!harfBuzzSkiaFontFuncs) {
         harfBuzzSkiaFontFuncs = hb_font_funcs_create();
-        hb_font_funcs_set_glyph_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyph, 0, 0);
+        hb_font_funcs_set_nominal_glyph_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyph, 0, 0);
+        hb_font_funcs_set_variation_glyph_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyphVS, 0, 0);
         hb_font_funcs_set_glyph_h_advance_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyphHorizontalAdvance, 0, 0);
         hb_font_funcs_set_glyph_h_kerning_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyphHorizontalKerning, 0, 0);
         hb_font_funcs_set_glyph_h_origin_func(harfBuzzSkiaFontFuncs, harfBuzzGetGlyphHorizontalOrigin, 0, 0);

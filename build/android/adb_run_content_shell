@@ -7,6 +7,7 @@
 optional_url=$1
 
 adb shell am start \
+  -S \
   -a android.intent.action.VIEW \
   -n org.chromium.content_shell_apk/.ContentShellActivity \
   ${optional_url:+-d "$optional_url"}

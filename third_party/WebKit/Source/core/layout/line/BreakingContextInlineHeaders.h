@@ -602,9 +602,9 @@ inline bool BreakingContext::handleText(WordMeasurements& wordMeasurements, bool
 
     // Non-zero only when kerning is enabled, in which case we measure
     // words with their trailing space, then subtract its width.
-    float wordTrailingSpaceWidth = (font.fontDescription().typesettingFeatures() & Kerning) ?
-        font.width(constructTextRun(font, &spaceCharacter, 1, style, style.direction())) + wordSpacing
-        : 0;
+    //float wordTrailingSpaceWidth = (font.fontDescription().typesettingFeatures() & Kerning) ?
+    //    font.width(constructTextRun(font, &spaceCharacter, 1, style, style.direction())) + wordSpacing
+    //    : 0;
 
     UChar lastCharacter = m_layoutTextInfo.m_lineBreakIterator.lastCharacter();
     UChar secondToLastCharacter = m_layoutTextInfo.m_lineBreakIterator.secondToLastCharacter();
@@ -662,9 +662,9 @@ inline bool BreakingContext::handleText(WordMeasurements& wordMeasurements, bool
             wordMeasurement.startOffset = lastSpace;
 
             float lastWidthMeasurement;
-            if (wordTrailingSpaceWidth && c == spaceCharacter)
-                lastWidthMeasurement = textWidth(layoutText, lastSpace, m_current.offset() + 1 - lastSpace, font, m_width.currentWidth(), m_collapseWhiteSpace, &wordMeasurement.fallbackFonts, &wordMeasurement.glyphBounds) - wordTrailingSpaceWidth;
-            else
+            //if (wordTrailingSpaceWidth && c == spaceCharacter)
+            //    lastWidthMeasurement = textWidth(layoutText, lastSpace, m_current.offset() + 1 - lastSpace, font, m_width.currentWidth(), m_collapseWhiteSpace, &wordMeasurement.fallbackFonts, &wordMeasurement.glyphBounds) - wordTrailingSpaceWidth;
+            //else
                 lastWidthMeasurement = textWidth(layoutText, lastSpace, m_current.offset() - lastSpace, font, m_width.currentWidth(), m_collapseWhiteSpace, &wordMeasurement.fallbackFonts, &wordMeasurement.glyphBounds);
 
             wordMeasurement.width = lastWidthMeasurement + wordSpacingForWordMeasurement;
@@ -696,7 +696,7 @@ inline bool BreakingContext::handleText(WordMeasurements& wordMeasurements, bool
                     // If the line needs the extra whitespace to be too long,
                     // then move the line break to the space and skip all
                     // additional whitespace.
-                    if (!m_width.fitsOnLine(charWidth)) {
+                    if (!m_width.fitsOnLine(charWidth < 0 ? -charWidth : charWidth)) {
                         lineWasTooWide = true;
                         m_lineBreak.moveTo(m_current.object(), m_current.offset(), m_current.nextBreakablePosition());
                         skipTrailingWhitespace(m_lineBreak, m_lineInfo);

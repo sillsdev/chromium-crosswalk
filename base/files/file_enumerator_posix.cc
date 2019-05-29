@@ -129,6 +129,8 @@ bool FileEnumerator::ReadDirectory(std::vector<FileInfo>* entries,
          additional space for pathname may be needed
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   struct dirent dent_buf;
   struct dirent* dent;
   while (readdir_r(dir, &dent_buf, &dent) == 0 && dent) {
@@ -156,5 +158,5 @@ bool FileEnumerator::ReadDirectory(std::vector<FileInfo>* entries,
   closedir(dir);
   return true;
 }
-
+#pragma GCC diagnostic pop
 }  // namespace base
